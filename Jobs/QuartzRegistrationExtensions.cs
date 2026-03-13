@@ -16,8 +16,9 @@ namespace BotApiTemplate.Jobs
                     var jobKey = new JobKey(jobType.FullName ?? jobType.Name);
                     var triggerKey = new TriggerKey($"{jobKey.Name}-trigger");
 
-                    options.AddJob(jobType, configure =>
-                        configure.WithIdentity(jobKey));
+                    options.AddJob(
+                        jobType,
+                        configure: configure => configure.WithIdentity(jobKey));
 
                     options.AddTrigger(configure => configure
                         .ForJob(jobKey)
