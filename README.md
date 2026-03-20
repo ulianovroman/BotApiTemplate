@@ -82,6 +82,7 @@ The application reads the following variables from environment:
 | `TELEGRAM_BOT_TOKEN` | Yes | Telegram bot token. Used to create `ITelegramBotClient` and make Telegram API calls (including webhook registration). If missing, app throws `InvalidOperationException` during startup validation. |
 | `RAILWAY_PUBLIC_DOMAIN` | Yes | Public domain used to compose webhook URL: `https://<RAILWAY_PUBLIC_DOMAIN>/api/telegram/webhook`. |
 | `TELEGRAM_WEBHOOK_SECRET` | Yes | Secret token for Telegram webhook security. Passed when registering webhook and validated for incoming webhook requests via `X-Telegram-Bot-Api-Secret-Token` header. |
+| `VIBE_BOT_API_SECRET` | Yes | API secret for non-webhook controller endpoints. Passed in request body field `vibeBotApiSecret` and validated before endpoint logic is executed. |
 | `GPT_API_KEY` | No | API key for GPT provider. If configured, `GptService` performs a direct GPT API call. |
 | `GPT_MODEL` | No | Model name for GPT provider for direct API calls in `GptService`, default: `gpt-4o-mini`. |
 
@@ -89,8 +90,14 @@ The application reads the following variables from environment:
 
 - `GptService` is registered in DI (`IGptService`), reads the `Gpt` configuration section (`ApiKey`, `Model`), and contains a direct GPT API call with example system/user prompt templates you can replace with your own prompts.
 - Quartz.NET is connected through DI (`AddQuartz` + hosted service) with default in-memory store and automatic job discovery by attribute: add a class in `Jobs` implementing `IJob` and annotate it with `QuartzSchedule` to register schedule automatically. Includes `DailySixPmUtcLogJob` as an example (18:00 UTC daily).
-- `TELEGRAM_BOT_TOKEN`, `RAILWAY_PUBLIC_DOMAIN`, and `TELEGRAM_WEBHOOK_SECRET` are mandatory for normal app operation.
-- Startup validates all required startup variables (`DATABASE_URL`, `TELEGRAM_BOT_TOKEN`, `RAILWAY_PUBLIC_DOMAIN`, `TELEGRAM_WEBHOOK_SECRET`) before service registration and shows a numbered list of missing/invalid values.
+- `TELEGRAM_BOT_TOKEN`, `RAILWAY_PUBLIC_DOMAIN`, `TELEGRAM_WEBHOOK_SECRET`, and `VIBE_BOT_API_SECRET` are mandatory for normal app operation.
+- Startup validates all required startup variables (`DATABASE_URL`, `TELEGRAM_BOT_TOKEN`, `RAILWAY_PUBLIC_DOMAIN`, `TELEGRAM_WEBHOOK_SECRET`, `VIBE_BOT_API_SECRET`) before service registration and shows a numbered list of missing/invalid values.
+
+
+## API endpoints
+
+- `POST /api/telegram/webhook` — receives Telegram webhook updates (protected by Telegram header secret).
+- `POST /api/telegram/webhook/settings` — returns current webhook settings (requires `vibeBotApiSecret` in request body).
 
 ## License
 

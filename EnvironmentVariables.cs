@@ -8,5 +8,6 @@ namespace VibeBotApi
         public const string GptModel = "GPT_MODEL";
         public const string RailwayPublicDomain = "RAILWAY_PUBLIC_DOMAIN";
         public const string TelegramWebhookSecret = "TELEGRAM_WEBHOOK_SECRET";
+        public const string VibeBotApiSecret = "VIBE_BOT_API_SECRET";
     }
 }
