@@ -72,6 +72,7 @@ namespace VibeBotApi
             ValidateRequiredEnvironmentVariable(EnvironmentVariables.DatabaseUrl, errors);
             ValidateRequiredEnvironmentVariable(EnvironmentVariables.RailwayPublicDomain, errors);
             ValidateRequiredEnvironmentVariable(EnvironmentVariables.TelegramWebhookSecret, errors);
+            ValidateRequiredEnvironmentVariable(EnvironmentVariables.VibeBotApiSecret, errors);
 
             var databaseUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.DatabaseUrl);
             if (!string.IsNullOrWhiteSpace(databaseUrl) && !TryValidateDatabaseUrl(databaseUrl, out var databaseUrlError))

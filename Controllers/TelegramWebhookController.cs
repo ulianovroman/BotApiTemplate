@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using VibeBotApi.Dto;
 using VibeBotApi.UpdateChainOfResponsibility;
 
 namespace VibeBotApi.Controllers;
@@ -37,9 +38,18 @@ public class TelegramWebhookController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("webhook/settings")]
-    public async Task<IActionResult> GetWebhookSettings(CancellationToken cancellationToken)
+    [HttpPost("webhook/settings")]
+    public async Task<IActionResult> GetWebhookSettings(
+        [FromBody] VibeBotApiSecretRequest request,
+        CancellationToken cancellationToken)
     {
+        var apiSecret = Environment.GetEnvironmentVariable(EnvironmentVariables.VibeBotApiSecret);
+
+        if (request.VibeBotApiSecret != apiSecret)
+        {
+            return Unauthorized();
+        }
+
         var result = await _telegramBotClient.GetWebhookInfo(cancellationToken);
 
         return Ok(result);
